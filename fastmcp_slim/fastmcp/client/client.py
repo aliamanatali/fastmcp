@@ -319,10 +319,6 @@ class Client(
         timeout: Optional timeout for requests (seconds or timedelta)
         init_timeout: Optional timeout for initial connection (seconds or timedelta).
             Set to 0 to disable. If None, uses the value in the FastMCP global settings.
-        keep_alive: Whether a stdio transport keeps its subprocess running between
-            connections. Only stdio transports have this option, so passing it with
-            any other transport raises `ValueError`. `None` (the default) leaves the
-            transport's own setting in place, which is `True` for stdio.
         mode: Protocol-era negotiation at connect time. `"auto"` (the default) probes
             `server/discover` and negotiates the modern era, denylist-falling-back to the
             initialize handshake for any server that is not positive evidence of a modern
@@ -354,6 +350,10 @@ class Client(
             extension's own claims. Rarely needed directly; prefer declaring claims on
             the extension itself. Claimed shapes are modern-only and inert on a legacy
             connection.
+        keep_alive: Whether a stdio transport keeps its subprocess running between
+            connections. Only stdio transports have this option, so passing it with
+            any other transport raises `ValueError`. `None` (the default) leaves the
+            transport's own setting in place, which is `True` for stdio.
 
     Examples:
         ```python
@@ -450,13 +450,13 @@ class Client(
         client_info: mcp_types.Implementation | None = None,
         auth: httpx2.Auth | Literal["oauth"] | str | None = None,
         verify: ssl.SSLContext | bool | str | None = None,
-        keep_alive: bool | None = None,
         mode: ConnectMode = "auto",
         prior_discover: mcp_types.DiscoverResult | None = None,
         input_required_max_rounds: int = DEFAULT_INPUT_REQUIRED_MAX_ROUNDS,
         cache: CacheConfig | bool | None = None,
         extensions: Sequence[ClientExtension] | None = None,
         result_claims: Mapping[str, Sequence[ResultClaim[Any]]] | None = None,
+        keep_alive: bool | None = None,
     ) -> None:
         self.name = name or self.generate_name()
 
